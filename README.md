@@ -4,7 +4,7 @@ This action will deploy a Helm chart to a cluster with an easy to use interface.
 
 ## Inputs
 
-| Input | Usage | Required | Default |
+| Input | Description | Required | Default |
 |---|---|---|---|
 | `deployment_name` | The name of the deployment, also used as the namespace name | Yes | |
 | `aws_access_key` | AWS access key ID | Yes | |
@@ -49,5 +49,5 @@ jobs:
 
 ## Caveats
 
-- This action assumes that the namespace has already been created. If there is demand for the action to also create a namespace/subnamespace, this can be added.
-- The IAM user being used must have permission to deploy resources in the cluster
+- This action assumes that the namespace has already been created. The namespace should be the same as the `deployment_name` input variable. If there is demand for the action to also create a namespace/subnamespace, this can be added.
+- The IAM user being used must have permission to deploy the required resources in the namespace of the same name as the release
