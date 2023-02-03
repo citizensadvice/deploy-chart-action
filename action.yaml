@@ -19,9 +19,8 @@ inputs:
     required: false
     default: chart
   pull_token:
-    description: 'A token to pull the chart repository. Defaults to `GITHUB_TOKEN`'
-    required: false
-    default: ${{ secrets.GITHUB_TOKEN }}
+    description: 'A token to pull the chart repository'
+    required: true
   cluster:
     description: 'The cluster to deploy to. Defaults to `devops-eks-controlplane`'
     required: false
@@ -41,7 +40,7 @@ runs:
         uses: actions/checkout@v3
         with:
           repository: ${{ inputs.chart_repository }}
-          token: ${{ secrets.pull_token }}
+          token: ${{ inputs.pull_token }}
           path: deploy-chart-action
 
       - name: Configure AWS Credentials
