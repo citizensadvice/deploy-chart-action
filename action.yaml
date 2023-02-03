@@ -58,9 +58,11 @@ runs:
         shell: bash
         id: overrides
         run: |
+          # Check if there are any values passed
           if [ -n "${{ inputs.helm_values }}" ]; then
             echo "${{ inputs.helm_values }}" | tee HELM_INPUTS
             
+            # Add --set and \ to each line
             while read ITEM; do
               echo "--set $ITEM \\" >> HELM_OVERRIDES
             done < HELM_INPUTS
