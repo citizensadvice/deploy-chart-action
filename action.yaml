@@ -58,10 +58,16 @@ runs:
         shell: bash
         id: overrides
         run: |
-          for ITEM in ${{ inputs.helm_overrides }}; do
-          echo "--set $ITEM \\" >> HELM_OVERRIDES
-          done
-          echo "HELM_OVERRIDES=$(cat HELM_OVERRIDES)" >> $GITHUB_OUTPUTS
+          if [ -n "${{ inputs.helm_values" }}]; then
+            echo "${{ inputs.helm_values }}" | tee HELM_INPUTS
+            
+            while read ITEM; do
+              echo "--set $ITEM \\" >> HELM_OVERRIDES
+            done < HELM_INPUTS
+
+            echo "HELM_OVERRIDES=$(cat HELM_OVERRIDES)" >> $GITHUB_OUTPUTS
+          else
+            echo "HELM_OVERRIDES=" >> $GITHUB_OUTPUTS
 
       - name: Deploy chart
         shell: bash
