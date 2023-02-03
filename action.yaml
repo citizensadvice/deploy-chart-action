@@ -58,7 +58,7 @@ runs:
         shell: bash
         id: overrides
         run: |
-          if [ -n "${{ inputs.helm_values" }}]; then
+          if [ -n "${{ inputs.helm_values }}"]; then
             echo "${{ inputs.helm_values }}" | tee HELM_INPUTS
             
             while read ITEM; do
@@ -68,6 +68,7 @@ runs:
             echo "HELM_OVERRIDES=$(cat HELM_OVERRIDES)" >> $GITHUB_OUTPUTS
           else
             echo "HELM_OVERRIDES=" >> $GITHUB_OUTPUTS
+          fi
 
       - name: Deploy chart
         shell: bash
