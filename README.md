@@ -32,6 +32,15 @@ jobs:
     name: Deploy chart
     runs-on: ubuntu-22.04
     steps:
+      - name: Build and push to ECR
+        uses: citizensadvice/build-and-push-private-action@v1
+        with:
+            aws_access_key: ${{ secrets.PUBLIC_PUSH_ECR_AWS_KEY }}
+            aws_secret_key: ${{ secrets.PUBLIC_PUSH_ECR_AWS_SECRET }}
+            dockerfile_context: '.'
+            repository_name: <REPOSITORY NAME HERE>
+            auth_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Deploy chart
         uses: citizensadvice/deploy-chart-action@v1
         with:
