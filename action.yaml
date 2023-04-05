@@ -4,11 +4,8 @@ inputs:
   deployment_name:
     description: 'The name of the deployment, also used as the namespace name'
     required: true
-  aws_access_key:
-    description: 'AWS access key ID'
-    required: true
-  aws_secret_key:
-    description: 'AWS secret access key'
+  role_arn:
+    description: 'ARN of the role to assume'
     required: true
   chart_repository:
     description: 'The name of the image repository. Will be used as the name of the Docker image. Defaults to the current repository.'
@@ -18,7 +15,7 @@ inputs:
     description: 'The path within the repository to the chart. Defaults to `chart`'
     required: false
     default: chart
-  pull_token:
+  chart_pull_token:
     description: 'A token to pull the chart repository'
     required: true
   cluster:
@@ -34,51 +31,50 @@ inputs:
     default: '/dev/null'
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
-      - name: Checkout Chart Repository
-        uses: actions/checkout@v3
-        with:
-          repository: ${{ inputs.chart_repository }}
-          token: ${{ inputs.pull_token }}
-          path: deploy-chart-action
+    - name: Checkout Chart Repository
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ inputs.chart_repository }}
+        token: ${{ inputs.chart_pull_token }}
+        path: deploy-chart-action
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16
-        with:
-          aws-access-key-id: ${{ inputs.aws_access_key }}
-          aws-secret-access-key: ${{ inputs.aws_secret_key }}
-          aws-region: eu-west-1
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1-node16
+      with:
+        role-to-assume: ${{ inputs.role_arn }}
+        role-session-name: ${{ inputs.deployment_name }}-deployment-actions-workflow
+        aws-region: eu-west-1
 
-      - name: Get Kube Config
-        shell: bash
-        run: aws eks update-kubeconfig --name=${{ inputs.cluster }}
+    - name: Get Kube Config
+      shell: bash
+      run: aws eks update-kubeconfig --name=${{ inputs.cluster }}
 
-      - name: Generate Helm Overrides
-        shell: bash
-        id: overrides
-        run: |
-          # Check if there are any values passed
-          if [ -n "${{ inputs.helm_values }}" ]; then
-            echo "${{ inputs.helm_values }}" | tee HELM_INPUTS
-            
-            # Add --set and \ to each line
-            while read ITEM; do
-              echo "--set $ITEM \\" >> HELM_OVERRIDES
-            done < HELM_INPUTS
+    - name: Generate Helm Overrides
+      shell: bash
+      id: overrides
+      run: |
+        # Check if there are any values passed
+        if [ -n "${{ inputs.helm_values }}" ]; then
+          echo "${{ inputs.helm_values }}" | tee HELM_INPUTS
+          
+          # Add --set and \ to each line
+          while read ITEM; do
+            echo "--set $ITEM \\" >> HELM_OVERRIDES
+          done < HELM_INPUTS
 
-            echo "HELM_OVERRIDES=$(cat HELM_OVERRIDES)" >> $GITHUB_OUTPUT
-          else
-            echo "HELM_OVERRIDES=" >> $GITHUB_OUTPUT
-          fi
+          echo "HELM_OVERRIDES=$(cat HELM_OVERRIDES)" >> $GITHUB_OUTPUT
+        else
+          echo "HELM_OVERRIDES=" >> $GITHUB_OUTPUT
+        fi
 
-      - name: Deploy chart
-        shell: bash
-        run: |
-          helm upgrade --install \
-          --namespace ${{ inputs.deployment_name }} \
-          ${{ steps.overrides.outputs.HELM_OVERRIDES }}
-          -f ${{ inputs.helm_values_file }} \
-          ${{ inputs.deployment_name }} \
-          deploy-chart-action/${{ inputs.chart_path }}
-      
+    - name: Deploy chart
+      shell: bash
+      run: |
+        helm upgrade --install \
+        --namespace ${{ inputs.deployment_name }} \
+        ${{ steps.overrides.outputs.HELM_OVERRIDES }}
+        -f ${{ inputs.helm_values_file }} \
+        ${{ inputs.deployment_name }} \
+        deploy-chart-action/${{ inputs.chart_path }}
