@@ -55,15 +55,16 @@ runs:
       shell: bash
       id: overrides
       run: |
+        # Prepend with --set, append with \
         cat << EOF >> script.py
         from sys import stdin
-        values = stdin.read().splitlines()
-        for value in values:
+        for value in stdin.read().strip().splitlines():
             print(f"--set {value} \\\")
         EOF
+
         # Check if there are any values passed
         if [ -n "${{ inputs.helm_values }}" ]; then
-          # Construct heredoc within $GITHUB_OUTPUT containing newly created string
+          # Construct heredoc within $GITHUB_OUTPUT containing newly created strings
           echo "HELM_OVERRIDES<<EOF" >> $GITHUB_OUTPUT
           echo "${{ inputs.helm_values }}" | python3 script.py >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
