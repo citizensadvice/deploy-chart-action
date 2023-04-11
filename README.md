@@ -56,4 +56,4 @@ jobs:
 ## Caveats
 
 - This action assumes that the namespace has already been created. The namespace should be the same as the `deployment_name` input variable. If there is demand for the action to also create a namespace/subnamespace, this can be added.
-- The IAM user being used must have permission to deploy the required resources in the namespace of the same name as the release
+- The IAM role being used must have permission to deploy the required resources in the namespace of the same name as the release. The role should be created using the [OIDC project](https://github.com/citizensadvice/aws-oidc-cdk) and use the Helm release role template.
