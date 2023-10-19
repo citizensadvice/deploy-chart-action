@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Build and push to ECR
-        uses: citizensadvice/build-and-push-private-action@v1
+        uses: citizensadvice/build-and-private-ecr-push-action@v1
         with:
             role_arn: <role arn>
             dockerfile_context: '.'
