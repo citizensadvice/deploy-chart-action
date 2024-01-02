@@ -41,7 +41,7 @@ runs:
         path: deploy-chart-action
 
     - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1-node16
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ inputs.role_arn }}
         role-session-name: ${{ inputs.deployment_name }}-deployment-actions-workflow
