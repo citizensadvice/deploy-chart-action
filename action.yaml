@@ -17,8 +17,7 @@ inputs:
     default: chart
   chart_pull_token:
     description: 'A token to pull the chart repository'
-    required: false
-    default: ${{ secrets.GITHUB_TOKEN }}
+    required: true
   cluster:
     description: 'The cluster to deploy to. Defaults to `devops-eks-controlplane`'
     required: false

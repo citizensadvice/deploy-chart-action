@@ -10,7 +10,7 @@ This action will deploy a Helm chart to a cluster with an easy to use interface.
 | `role_arn`         | The ARN of the role to assume                                                  | Yes      |                           |
 | `chart_repository` | The name of the image repository. Will be used as the name of the Docker image | No       | `github.repository`       |
 | `chart_path`       | The path within the repository to the chart                                    | No       | `chart`                   |
-| `chart_pull_token` | A token to pull the chart repository                                           | No       | `GITHUB_TOKEN`            |
+| `chart_pull_token` | A token to pull the chart repository                                           | Yes      |                           |
 | `cluster`          | The cluster to deploy to                                                       | No       | `devops-eks-controlplane` |
 | `helm_values`      | A newline seperated list of helm values, excluding the `--set` flag            | No       |                           |
 | `helm_values_file` | Path to a helm values file                                                     | No       |                           |
