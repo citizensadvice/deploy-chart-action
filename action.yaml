@@ -34,7 +34,7 @@ runs:
   using: 'composite'
   steps:
     - name: Checkout Chart Repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: ${{ inputs.chart_repository }}
         token: ${{ inputs.chart_pull_token }}
