@@ -57,6 +57,6 @@ runs:
       run: |
         helm upgrade --install \
         --namespace ${{ inputs.release_name }} \
-        ${{ inputs.helm_args }} \ 
+        ${{ inputs.helm_args }} \
         ${{ inputs.release_name }} \
         ${{ inputs.chart_pull_path }}/${{ inputs.chart_path }}
