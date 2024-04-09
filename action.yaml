@@ -39,7 +39,7 @@ runs:
       with:
         repository: ${{ inputs.chart_repository }}
         token: ${{ inputs.chart_pull_token }}
-        path: $ {{ inputs.chart_pull_path }}
+        path: ${{ inputs.chart_pull_path }}
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
