@@ -42,7 +42,7 @@ runs:
         path: ${{ inputs.chart_pull_path }}
 
     - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4
+      uses: aws-actions/configure-aws-credentials@v5
       with:
         role-to-assume: ${{ inputs.role_arn }}
         role-session-name: ${{ inputs.release_name }}-deployment-actions-workflow
